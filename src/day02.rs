@@ -1,30 +1,30 @@
 
-fn round(op: u8, me: u8) -> u8{
-    match (op,me - 23){
-        (b'A',b'A') => 3,
-        (b'A',b'B') => 6,
-        (b'A',b'C') => 0,
-        (b'B',b'A') => 0,
-        (b'B',b'B') => 3,
-        (b'B',b'C') => 6,
-        (b'C',b'A') => 6,
-        (b'C',b'B') => 0,
-        (b'C',b'C') => 3,
+fn round(op: char, me: char) -> u32{
+    match (op,me){
+        ('A','X') => 3 + 1,
+        ('A','Y') => 6 + 2,
+        ('A','Z') => 0 + 3,
+        ('B','X') => 0 + 1,
+        ('B','Y') => 3 + 2,
+        ('B','Z') => 6 + 3,
+        ('C','X') => 6 + 1,
+        ('C','Y') => 0 + 2,
+        ('C','Z') => 3 + 3,
         _ => 0
     }
 }
 
-fn rigged_round(op: u8, me: u8) -> u32{
-    match (op,me - 23){
-        (b'A',b'A') => 0 + 3,
-        (b'A',b'B') => 3 + 1,
-        (b'A',b'C') => 6 + 2,
-        (b'B',b'A') => 0 + 1,
-        (b'B',b'B') => 3 + 2,
-        (b'B',b'C') => 6 + 3,
-        (b'C',b'A') => 0 + 2,
-        (b'C',b'B') => 3 + 3,
-        (b'C',b'C') => 6 + 1,
+fn rigged_round(op: char, me: char) -> u32{
+    match (op,me){
+        ('A','X') => 0 + 3,
+        ('A','Y') => 3 + 1,
+        ('A','Z') => 6 + 2,
+        ('B','X') => 0 + 1,
+        ('B','Y') => 3 + 2,
+        ('B','Z') => 6 + 3,
+        ('C','X') => 0 + 2,
+        ('C','Y') => 3 + 3,
+        ('C','Z') => 6 + 1,
         _ => 0
     }
 }
@@ -32,21 +32,17 @@ fn rigged_round(op: u8, me: u8) -> u32{
 fn game_rps(input: &str) -> u32{
     input.lines()
         .map(|line| line.split_once(" ").unwrap())
-        .fold(0 , |acc,(op,me)| {
-            let oponent = op.trim().chars().next().unwrap() as u8;
-            let play  = me.trim().chars().next().unwrap() as u8;
-            acc + (round(oponent, play) + play - b'W') as u32
-        })
+        .fold(0 , |acc,(op,me)| 
+            acc + round(op.chars().nth(0).unwrap(), me.chars().nth(0).unwrap())
+        )
 }
 
 fn rigged_game_rps(input: &str) -> u32{
     input.lines()
         .map(|line| line.split_once(" ").unwrap())
-        .fold(0 , |acc,(op,me)| {
-            let oponent = op.trim().chars().next().unwrap() as u8;
-            let play  = me.trim().chars().next().unwrap() as u8;
-            acc + rigged_round(oponent, play)
-        })
+        .fold(0 , |acc,(op,me)| 
+            acc + rigged_round(op.chars().nth(0).unwrap(), me.chars().nth(0).unwrap())
+    )
 }
 
 pub fn part1(){
